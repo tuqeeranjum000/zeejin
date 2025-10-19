@@ -87,8 +87,31 @@ export default function Home() {
   const handleSendMessage = () => {
     if (!inputValue.trim() && selectedFiles.length === 0) return;
 
-    // Show login popup for guest users
-    openAuthModal("signin");
+    // Add user message
+    const userMessage: Message = {
+      id: Date.now().toString(),
+      role: "user",
+      content: inputValue.trim(),
+      timestamp: new Date(),
+      attachedFiles: selectedFiles.length > 0 ? [...selectedFiles] : undefined,
+    };
+
+    setMessages(prev => [...prev, userMessage]);
+    setInputValue("");
+    setSelectedFiles([]);
+
+    // Simulate AI response
+    setIsTyping(true);
+    setTimeout(() => {
+      const assistantMessage: Message = {
+        id: (Date.now() + 1).toString(),
+        role: "assistant",
+        content: `I'll help you with that! You said: "${userMessage.content}". This is a simulated response. In a real implementation, this would connect to an AI service.`,
+        timestamp: new Date(),
+      };
+      setMessages(prev => [...prev, assistantMessage]);
+      setIsTyping(false);
+    }, 1500);
   };
 
   const handleKeyPress = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
